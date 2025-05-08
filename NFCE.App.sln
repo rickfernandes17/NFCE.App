@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCE.App", "NFCE.App.csproj", "{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E0DDFFD-78FD-4891-A190-4AFBC8792D6E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D38FBA38-95F5-433B-968A-9A8062126F9D}
+	EndGlobalSection
+EndGlobal
