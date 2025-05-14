@@ -7,6 +7,7 @@ namespace NFCEApp.Models
         public int id { get; set; }
         public string chave { get; set; }
         public DateTime dataCompra { get; set; }
+        public bool Sincronizada { get; set; } = false;
         //public object produtos { get; set; }
     }
 }

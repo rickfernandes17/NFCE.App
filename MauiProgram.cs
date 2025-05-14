@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NFCEApp.DBContext;
 using NFCEApp.Services;
 
@@ -20,8 +21,12 @@ public static class MauiProgram
 		builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<NotaFiscalApiService>();
 
-        var dbContext = new AppDbContext();
-        dbContext.Database.EnsureCreated();
+        string conexionDb = Path.Combine(FileSystem.AppDataDirectory, "local.db");
+		//if (File.Exists(conexionDb))
+		//	File.Delete(conexionDb);
+		var dbContext = new AppDbContext();
+        //dbContext.Database.EnsureCreated();
+		dbContext.Database.Migrate();
         dbContext.Dispose();
 
 #if DEBUG

@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NFCEApp.DBContext;
 using NFCEApp.Services;
 using System.ComponentModel;
 using System.Linq;
-using NFCEApp.Models;
 using System.Collections.ObjectModel;
+using NFCEApp.DBContext;
+using NFCEApp.Models;
+
 namespace NFCE.App
 {
     public partial class MainPage : ContentPage
@@ -29,19 +30,27 @@ namespace NFCE.App
         }
         private async Task SincronizarNotas()
         {
-            var notasDaApi = await _apiService.GetNotasAsync();
-
-            foreach (var nota in notasDaApi)
+            try
             {
-                // Verifica se já existe
-                bool existe = _db.NotasFiscais.Any(n => n.id == nota.id);
-                if (!existe)
-                {
-                    _db.NotasFiscais.Add(nota); // Inclui os ProdutosNotas também se configurado o relacionamento
-                }
-            }
+                var notasDaApi = await _apiService.GetNotasAsync();
 
-            await _db.SaveChangesAsync();
+                foreach (var nota in notasDaApi)
+                {
+                    // Verifica se já existe
+                    bool existe = _db.NotasFiscais.Any(n => n.id == nota.id);
+                    if (!existe)
+                    {
+                        _db.NotasFiscais.Add(nota); // Inclui os ProdutosNotas também se configurado o relacionamento
+                    }
+                }
+
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Exiba o erro no Debug ou na interface
+                await DisplayAlert("Erro", $"Falha na sincronização: {ex.Message}", "OK");
+            }
         }
 
         private async Task CarregarNotas()
