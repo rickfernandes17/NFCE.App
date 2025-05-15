@@ -14,7 +14,8 @@
         Route="MainPage" />
 
     <FlyoutItem Title="Notas Fiscais" Icon="notas.png">
-        <ShellContent Title="Notas" ContentTemplate="{DataTemplate views:NotasPage}" />
+        <ShellContent Title="Notas" ContentTemplate="{DataTemplate views:ListNotasPage}" />
     </FlyoutItem>
+    
 
 </Shell>

@@ -25,17 +25,19 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Label Text="{Binding chave}" FontSize="20" Grid.Column="0"/>
-                                <Label Text="{Binding dataCompra, StringFormat='{0:dd/MM/yyyy}'}" FontSize="20" Grid.Column="1"/>
+                                <Label Text="{Binding id}" FontSize="20" Grid.Column="0"/>
+                                <Label Text="{Binding chave}" FontSize="20" Grid.Column="1"/>
+                                <Label Text="{Binding dataCompra, StringFormat='{0:dd/MM/yyyy}'}" FontSize="20" Grid.Column="2"/>
                                 <Button Text="🗑️ Excluir"
                                     Padding="10"
                                     FontSize="18"
                                     BackgroundColor="Red"
                                     Clicked="OnExcluirClicked"
                                     CommandParameter="{Binding .}"
-                                    Grid.Column="2"/>
+                                    Grid.Column="3"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

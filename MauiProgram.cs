@@ -25,9 +25,8 @@ public static class MauiProgram
 		//if (File.Exists(conexionDb))
 		//	File.Delete(conexionDb);
 		var dbContext = new AppDbContext();
-        //dbContext.Database.EnsureCreated();
-		dbContext.Database.Migrate();
-        dbContext.Dispose();
+		//dbContext.Database.EnsureCreated();
+		dbContext.Dispose();
 
 #if DEBUG
         builder.Logging.AddDebug();

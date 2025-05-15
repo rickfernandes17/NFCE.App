@@ -41,5 +41,52 @@ namespace NFCEApp.Services
                 return new List<NotaFiscal>();
             }
         }
+        public async Task<NotaFiscal?> PostNotaAsync(NotaFiscal nota)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(nota);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _http.PostAsync("api/NotaFiscal", content);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                // Desserializa a nota retornada (com o ID gerado na API)
+                var notaCriada = JsonSerializer.Deserialize<NotaFiscal>(responseContent, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return notaCriada;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Erro ao enviar nota: {ex}");
+                return null;
+            }
+        }
+        public async Task<bool> DeleteNotaAsync(NotaFiscal nota)
+        {
+            if (nota.idApi != 0)
+            {
+                try
+                {
+                    var json = JsonSerializer.Serialize(nota);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var id = nota.idApi;
+                    var response = await _http.DeleteAsync($"api/NotaFiscal/{id}");
+                    response.EnsureSuccessStatusCode();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Erro ao enviar nota: {ex}");
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 }

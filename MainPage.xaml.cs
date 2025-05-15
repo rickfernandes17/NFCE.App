@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using NFCEApp.DBContext;
 using NFCEApp.Models;
+using System.Text.Json;
 
 namespace NFCE.App
 {
@@ -24,9 +25,15 @@ namespace NFCE.App
         }
         protected override async void OnAppearing()
         {
-            base.OnAppearing();
-            //await SincronizarNotas(); // Agora o método será executado corretamente
-            await CarregarNotas(); // Carrega as notas após a sincronização
+            try
+            {
+                base.OnAppearing();
+                //await SincronizarNotas(); // Agora o método será executado corretamente
+                await CarregarNotas(); // Carrega as notas após a sincronização
+            }
+            catch (Exception ex) { 
+                await DisplayAlert("Erro", $"Falha ao carregar notas: {ex.Message}", "OK"); // Exibe erro
+            }
         }
         private async Task SincronizarNotas()
         {
@@ -40,6 +47,7 @@ namespace NFCE.App
                     bool existe = _db.NotasFiscais.Any(n => n.id == nota.id);
                     if (!existe)
                     {
+                        nota.Sincronizada = true; // Marca como sincronizada
                         _db.NotasFiscais.Add(nota); // Inclui os ProdutosNotas também se configurado o relacionamento
                     }
                 }
