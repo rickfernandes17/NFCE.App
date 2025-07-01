@@ -2,11 +2,12 @@
 
 namespace NFCEApp.Models
 {
-    public class ProdutoNota
+    public class Produto
     {
         
         public int Id { get; set; }
-        public int NotaFiscalId { get; set; }
+        public int? NotaFiscalId { get; set; }
+        public NotaFiscal? NotaFiscal { get; set; }
         public string Nome { get; set; }
         public decimal Quantidade { get; set; }
         public string Unidade { get; set; }

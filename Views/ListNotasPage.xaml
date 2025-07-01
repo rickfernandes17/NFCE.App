@@ -31,6 +31,7 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -45,6 +46,8 @@
                                 <Label Text="{Binding dataCompra, StringFormat='Data: {0:dd/MM/yyyy}'}" FontSize="Medium" Grid.Row="1"/>
                                 <Label Text="ID API" FontSize="Medium" Grid.Row="2"/>
                                 <Label Text="{Binding idApi}" FontSize="Medium" Grid.Column="1" Grid.Row="2"/>
+                                <Label Text="ID DB" FontSize="Medium" Grid.Row="3"/>
+                                <Label Text="{Binding id}" FontSize="Medium" Grid.Column="1" Grid.Row="3"/>
 
                                 <Button Text="🗑 Excluir"
                                     Grid.Row="2"

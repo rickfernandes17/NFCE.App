@@ -17,7 +17,7 @@ namespace NFCEApp.Services
         {
             _http = new HttpClient
             {
-                BaseAddress = new Uri("http://192.168.0.100:5175/") // Substitua pela sua API real
+                BaseAddress = new Uri("http://192.168.0.104:5175/") // Substitua pela sua API real
             };
         }
 
@@ -39,6 +39,25 @@ namespace NFCEApp.Services
                 // Exiba o erro no Debug ou na interface
                 Debug.WriteLine($"ERRO: {ex}");
                 return new List<NotaFiscal>();
+            }
+        }
+        // Find notas
+        public async Task<NotaFiscal> FindNotasAsync(int id)
+        {
+            try
+            {
+                var response = await _http.GetAsync($"api/NotaFiscal/{id}");
+                response.EnsureSuccessStatusCode();
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<NotaFiscal>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Erro ao buscar notas: {ex}");
+                return new NotaFiscal();
             }
         }
         public async Task<NotaFiscal?> PostNotaAsync(NotaFiscal nota)
@@ -75,7 +94,7 @@ namespace NFCEApp.Services
                 {
                     var json = JsonSerializer.Serialize(nota);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var id = nota.idApi;
+                    int id = nota.idApi??0;
                     var response = await _http.DeleteAsync($"api/NotaFiscal/{id}");
                     response.EnsureSuccessStatusCode();
                     return true;

@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NFCE.App.Views.NotaPage"
-             xmlns:viewmodels="clr-namespace:NFCE.App.ViewModels"
-             Title="NotaPage">
+             xmlns:views="clr-namespace:NFCE.App.Views"
+             x:Class="NFCE.App.Views.NotaPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Salvar" Command="{Binding AdicionarNotaCommand}"/>
     </ContentPage.ToolbarItems>
-    <VerticalStackLayout>
-        <Frame Margin="20" Padding="10" BorderColor="Gray">
-            <FlexLayout Direction="Column">
-                <Label Text="Nota Fiscal"
-                    FontSize="24"
-                    HorizontalOptions="Center" />
-                <Entry Placeholder="Número da Nota"
-                       Text="{Binding Nota.chave}"
-                    Margin="0,10,0,0" />
-                <DatePicker
-                    Date="{Binding Nota.dataCompra}"
-                    Format="D"
-                    Margin="0,10,0,0" />
-            </FlexLayout>
-        </Frame>
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,*,Auto" Padding="10">
+
+        <!-- Dados fixos da nota -->
+        <VerticalStackLayout Grid.Row="0" Spacing="5">
+            <Label Text="Nota Fiscal" FontSize="20" FontAttributes="Bold"/>
+            <Entry Text="{Binding Nota.chave}"/>
+            <DatePicker Date="{Binding Nota.dataCompra}"/>
+        </VerticalStackLayout>
+
+        <!-- Lista de produtos rolável -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout>
+                <Label Text="Produtos da Nota" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0"/>
+                <Label Text="{Binding Nota.Produtos.Count, StringFormat='Total de produtos: {0}'}"/>
+
+                <!-- ContentView com os produtos -->
+                <views:ProdutosDaNotaView Produtos="{Binding Nota.Produtos}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Botão fixo ao final -->
+        <Button Text="Salvar"
+                Grid.Row="2"
+                Margin="0,10,0,0"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"/>
+    </Grid>
+    
 </ContentPage>

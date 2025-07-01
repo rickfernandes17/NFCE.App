@@ -8,7 +8,7 @@ namespace NFCEApp.DBContext
         //public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<NotaFiscal> NotasFiscais { get; set; }
-        public DbSet<ProdutoNota> ProdutosNota { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -20,6 +20,7 @@ namespace NFCE.App.ViewModels
     public class NotasViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<NotaFiscal> Notas { get; set; } = new();
+        public ObservableCollection<Produto> ProdutosDaNota { get; set; }
         private NotaFiscal _nota = new NotaFiscal
         {
             dataCompra = DateTime.Now,
@@ -45,6 +46,12 @@ namespace NFCE.App.ViewModels
             EditarNotaCommand = new Command<NotaFiscal>(EditarNota);
             ExcluirNotaCommand = new Command<NotaFiscal>(ExcluirNota);
             SincronizarCommand = new Command(async () => await SincronizarNotas());
+
+            ProdutosDaNota = new ObservableCollection<Produto>
+            {
+            new Produto { Nome = "Arroz", Quantidade = 2, PrecoUnitario = 18.50m },
+            new Produto { Nome = "Feijão", Quantidade = 1, PrecoUnitario = 9.99m },
+            };
         }
 
         public async Task CarregarNotas()
@@ -53,17 +60,20 @@ namespace NFCE.App.ViewModels
             {
                 // Carregue do SQLite ou API local
                 Notas.Clear();
-                var notas = await _db.NotasFiscais.ToListAsync();
-                foreach (var nota in notas)
+                using (var db = new AppDbContext())
                 {
-                    Notas.Add(nota);
+                    var notas = await db.NotasFiscais.ToListAsync();
+                    foreach (var nota in notas)
+                    {
+                        Notas.Add(nota);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 await Application.Current.MainPage.DisplayAlert("Erro", $"Falha ao carregar notas: {ex.Message}", "OK");
             }
-            }
+        }
 
         private async void AdicionarNota()
         {
@@ -108,12 +118,35 @@ namespace NFCE.App.ViewModels
         {
             if (nota == null)
                 return;
+            if (nota.idApi != 0)
+            {
+                nota = await _db.NotasFiscais
+                    .Include(n => n.Produtos) // Inclui os produtos relacionados
+                    .FirstOrDefaultAsync(n => n.id == nota.id);
+                // Verifica se tem produtos na base se nao busca na Api
+                if (nota.Produtos == null || !nota.Produtos.Any())
+                {
+                    // Se não tem produtos, busca na API
+                    var api = new NotaFiscalApiService();
+                    NotaFiscal notaapi = await api.FindNotasAsync(nota.idApi ?? nota.id);
+                    nota.Produtos = notaapi.Produtos;
+                    if (nota.Produtos.Any())
+                    {
+                        foreach (var produto in nota.Produtos)
+                        {
+                            produto.Marcado = true; // Marca o produto como selecionado
+                            _db.Produtos.Add(produto); // Adiciona o produto ao contexto
+                        }
+                        _db.SaveChangesAsync(); // Salva as alterações no contexto
+                    }
+                }
+            }
 
             // Abre a página NotaPage passando a nota para edição
-           await Shell.Current.GoToAsync(nameof(NotaPage), new Dictionary<string, object>{
+            await Shell.Current.GoToAsync(nameof(NotaPage), new Dictionary<string, object>{
                     { "NotaSelecionada", nota }
                 });
-                    }
+        }
 
         private async void ExcluirNota(NotaFiscal nota)
         {
@@ -123,13 +156,26 @@ namespace NFCE.App.ViewModels
                 // Remover do SQLite
                 if (nota.Sincronizada && nota.idApi != 0)
                 {
-                    // Se já sincronizada, faça a exclusão na API
+                    //Verifica se a nota está na API
                     var apiService = new NotaFiscalApiService();
-                    await apiService.DeleteNotaAsync(nota);
+                    var notaApi = await apiService.FindNotasAsync(nota.idApi.Value);
+                    if(notaApi.id != 0)
+                    {
+                        // Se já sincronizada, faça a exclusão na API
+                        bool deletado = await apiService.DeleteNotaAsync(nota);
+                        if (!deletado)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Erro", "Falha ao excluir nota na API", "OK");
+                        }
+                    }
                 }
+                nota = await _db.NotasFiscais
+                    .Include(n => n.Produtos)
+                    .FirstOrDefaultAsync(n => n.id == nota.id);
                 _db.NotasFiscais.Remove(nota);
                 _db.SaveChangesAsync();
-                await Application.Current.MainPage.DisplayAlert("Excluido",$"Excluido nota {nota.chave}", "OK");
+                await Application.Current.MainPage.DisplayAlert("Excluido", $"Excluido nota {nota.chave}", "OK");
+                CarregarNotas();
             }
             catch (Exception ex)
             {
@@ -142,15 +188,18 @@ namespace NFCE.App.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public async Task SincronizarNotas() {
+        public async Task SincronizarNotas()
+        {
             try
             {
                 await SincronizarNotasEnvio();
                 await SincronizarNotasRecebimento();
+                Notas.Clear();
+                await Application.Current.MainPage.DisplayAlert("Sincronização", "Atualizado", "OK");
                 await CarregarNotas();
-                await Application.Current.MainPage.DisplayAlert("Sincronização","Atualizado", "OK");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 await Application.Current.MainPage.DisplayAlert("Erro", $"Falha na sincronização: {ex.Message}", "OK");
             }
         }
@@ -164,7 +213,7 @@ namespace NFCE.App.ViewModels
                 foreach (var nota in notasDaApi)
                 {
                     // Verifica se já existe
-                    bool existe = _db.NotasFiscais.Any(n => n.id == nota.id);
+                    bool existe = _db.NotasFiscais.Any(n => n.idApi == nota.id);
                     if (!existe)
                     {
                         nota.Sincronizada = true; // Marca como sincronizada

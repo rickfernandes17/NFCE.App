@@ -1,5 +1,6 @@
 using NFCE.App.ViewModels;
 using NFCEApp.Models;
+using NFCEApp.Services;
 
 namespace NFCE.App.Views;
 
@@ -14,6 +15,7 @@ public partial class NotaPage : ContentPage, IQueryAttributable
     {
         if (query.TryGetValue("NotaSelecionada", out var nota))
         {
+            // Se a nota for passada, atribui ao ViewModel
             var viewModel = BindingContext as NotasViewModel;
             viewModel.Nota = nota as NotaFiscal;
         }
