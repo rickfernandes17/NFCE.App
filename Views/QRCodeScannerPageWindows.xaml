@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="NFCE.App.Views.QRCodeScannerPageWindows"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Scanner QR Code (Windows)">
+    
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20">
+            
+            <!-- Informação sobre limitação do Windows -->
+            <Frame BackgroundColor="LightYellow" 
+                   BorderColor="Orange" 
+                   Padding="15">
+                <StackLayout>
+                    <Label Text="⚠️ Limitação do Windows" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           TextColor="DarkOrange" />
+                    <Label Text="O scanner de câmera não está disponível no Windows com ZXing.Net.Maui. Use uma das alternativas abaixo:" 
+                           FontSize="14" 
+                           TextColor="DarkOrange"
+                           LineBreakMode="WordWrap" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Opção 1: Upload de imagem -->
+            <Frame BackgroundColor="LightBlue" 
+                   Padding="15">
+                <StackLayout>
+                    <Label Text="📷 Opção 1: Upload de Imagem" 
+                           FontSize="16" 
+                           FontAttributes="Bold" />
+                    <Label Text="Selecione uma imagem que contenha um QR code para decodificar" 
+                           FontSize="14" 
+                           LineBreakMode="WordWrap" />
+                    <Button x:Name="SelectImageButton" 
+                            Text="Selecionar Imagem" 
+                            Clicked="OnSelectImageClicked" 
+                            BackgroundColor="DodgerBlue" 
+                            TextColor="White" 
+                            Margin="0,10,0,0" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Opção 2: Input manual -->
+            <Frame BackgroundColor="LightGreen" 
+                   Padding="15">
+                <StackLayout>
+                    <Label Text="✏️ Opção 2: Entrada Manual" 
+                           FontSize="16" 
+                           FontAttributes="Bold" />
+                    <Label Text="Digite ou cole a URL do QR code manualmente" 
+                           FontSize="14" 
+                           LineBreakMode="WordWrap" />
+                    <Entry x:Name="ManualUrlEntry" 
+                           Placeholder="Digite ou cole a URL aqui..." 
+                           FontSize="14" 
+                           Margin="0,10,0,0" />
+                    <Button x:Name="ProcessManualUrlButton" 
+                            Text="Processar URL" 
+                            Clicked="OnProcessManualUrlClicked" 
+                            BackgroundColor="ForestGreen" 
+                            TextColor="White" 
+                            Margin="0,10,0,0" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Resultado -->
+            <Frame BackgroundColor="LightGray" 
+                   Padding="15"
+                   IsVisible="{Binding IsResultVisible}">
+                <StackLayout>
+                    <Label Text="✅ QR Code Processado:" 
+                           FontSize="16" 
+                           FontAttributes="Bold" />
+                    <Label x:Name="ResultLabel" 
+                           Text="{Binding QRCodeResult}" 
+                           FontSize="14" 
+                           TextColor="DarkBlue"
+                           LineBreakMode="WordWrap" />
+                    <Label Text="{Binding LastScanTimeFormatted, StringFormat='Processado em: {0}'}" 
+                           FontSize="12" 
+                           TextColor="Gray" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Botão de limpeza -->
+            <Button x:Name="ClearButton" 
+                    Text="Limpar Resultado" 
+                    Clicked="OnClearClicked" 
+                    BackgroundColor="Gray" 
+                    TextColor="White" 
+                    IsVisible="{Binding IsResultVisible}" />
+
+            <!-- Informações adicionais -->
+            <Frame BackgroundColor="WhiteSmoke" 
+                   Padding="15">
+                <StackLayout>
+                    <Label Text="💡 Dicas:" 
+                           FontSize="16" 
+                           FontAttributes="Bold" />
+                    <Label Text="• Para usar o scanner de câmera, execute o app no Android ou iOS" 
+                           FontSize="12" />
+                    <Label Text="• Você pode usar ferramentas online para gerar QR codes de teste" 
+                           FontSize="12" />
+                    <Label Text="• A URL será armazenada na mesma variável que o scanner de câmera" 
+                           FontSize="12" />
+                </StackLayout>
+            </Frame>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
+

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="NFCE.App.Views.QRCodeScannerPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             Title="Scanner QR Code">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Scanner de QR Code -->
+        <zxing:CameraBarcodeReaderView x:Name="CameraView"
+                                       Grid.Row="0"
+                                       BarcodesDetected="OnBarcodesDetected"
+                                       IsDetecting="True" />
+
+        <!-- Resultado do QR Code -->
+        <Frame Grid.Row="1" 
+               BackgroundColor="LightGray" 
+               Margin="10"
+               Padding="15"
+               IsVisible="{Binding IsResultVisible}">
+            <StackLayout>
+                <Label Text="QR Code Detectado:" 
+                       FontSize="16" 
+                       FontAttributes="Bold" />
+                <Label x:Name="ResultLabel" 
+                       Text="{Binding QRCodeResult}" 
+                       FontSize="14" 
+                       TextColor="DarkBlue"
+                       LineBreakMode="WordWrap" />
+            </StackLayout>
+        </Frame>
+
+        <!-- Botões de controle -->
+        <StackLayout Grid.Row="2" 
+                     Orientation="Horizontal" 
+                     HorizontalOptions="Center" 
+                     Margin="10">
+            <Button x:Name="StartStopButton" 
+                    Text="Parar Scanner" 
+                    Clicked="OnStartStopClicked" 
+                    BackgroundColor="Red" 
+                    TextColor="White" 
+                    Margin="5" />
+            <Button x:Name="ClearButton" 
+                    Text="Limpar" 
+                    Clicked="OnClearClicked" 
+                    BackgroundColor="Gray" 
+                    TextColor="White" 
+                    Margin="5" />
+        </StackLayout>
+    </Grid>
+</ContentPage>
+

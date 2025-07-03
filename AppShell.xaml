@@ -16,6 +16,14 @@
     <FlyoutItem Title="Notas Fiscais" Icon="notas.png">
         <ShellContent Title="Notas" ContentTemplate="{DataTemplate views:ListNotasPage}" />
     </FlyoutItem>
-    
+
+    <FlyoutItem Title="Scanner QR Code" Icon="qrcode.png">
+        <ShellContent Title="QR Scanner" ContentTemplate="{DataTemplate views:QRCodeScannerPageSelector}" />
+    </FlyoutItem>
+
+    <!-- Páginas específicas para navegação direta -->
+    <ShellContent Title="QR Scanner Mobile" ContentTemplate="{DataTemplate views:QRCodeScannerPage}" Route="QRCodeScannerPage" />
+    <ShellContent Title="QR Scanner Windows" ContentTemplate="{DataTemplate views:QRCodeScannerPageWindows}" Route="QRCodeScannerPageWindows" />
 
 </Shell>
+
